@@ -23,12 +23,18 @@ class LoginView(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
         user = authenticate(username=username, password=password)
+        is_helpdesk_user = HelpDeskUser.objects.filter(user=user).exists()
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            # Включаем ID пользователя в ответ
+            try:
+                lecturer = Lecturer.objects.get(user=user)
+                lecturer_id = lecturer.id
+            except Lecturer.DoesNotExist:
+                lecturer_id = None
             return Response({
                 "token": token.key,
-                "userId": user.id  # Добавляем ID пользователя
+                "userId": lecturer_id,
+                "helpdeskUser": is_helpdesk_user
             }, status=status.HTTP_200_OK)
         return Response({"error": "Неверные учетные данные"}, status=status.HTTP_400_BAD_REQUEST)
     

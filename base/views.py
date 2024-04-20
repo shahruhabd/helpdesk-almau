@@ -25,7 +25,11 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            return Response({"token": token.key}, status=status.HTTP_200_OK)
+            # Включаем ID пользователя в ответ
+            return Response({
+                "token": token.key,
+                "userId": user.id  # Добавляем ID пользователя
+            }, status=status.HTTP_200_OK)
         return Response({"error": "Неверные учетные данные"}, status=status.HTTP_400_BAD_REQUEST)
     
 

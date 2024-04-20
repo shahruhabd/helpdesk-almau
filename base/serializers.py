@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Lecturer
+from .models import Lecturer, HelpDeskRequest
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -28,3 +28,17 @@ class LecturerSerializer(serializers.ModelSerializer):
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         lecturer = Lecturer.objects.create(user=user, **validated_data)
         return lecturer
+
+
+
+class HelpDeskRequestSerializer(serializers.ModelSerializer):
+    creator_full_name = serializers.CharField(source='creator.full_name', read_only=True)
+    
+    class Meta:
+        model = HelpDeskRequest
+        fields = '__all__'  
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['creator'] = instance.creator.full_name
+        return representation

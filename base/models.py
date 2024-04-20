@@ -29,10 +29,8 @@ class HelpDeskRequest(models.Model):
     description = models.TextField(verbose_name='Описание')
     creator = models.ForeignKey(Lecturer, related_name='created_requests', on_delete=models.CASCADE, verbose_name='От')
     handler = models.ForeignKey(HelpDeskUser, related_name='handled_requests', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Заявку принял')
-    conversation = models.JSONField(blank=True, null=True, verbose_name='Диалог')
     is_closed = models.BooleanField(default=False, verbose_name='Закрыта')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создана')
-    closed_at = models.DateTimeField(null=True, blank=True, verbose_name='Время закрытия')
     decline_reason = models.TextField(null=True, blank=True, verbose_name='Причина отказа')
 
     NEW = 'NEW'

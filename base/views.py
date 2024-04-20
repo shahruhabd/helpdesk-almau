@@ -1,10 +1,12 @@
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import LecturerSerializer
+from .serializers import *
+from .models import *
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
+from rest_framework.reverse import reverse
 
 @api_view(['POST'])
 def register_user(request):
@@ -25,3 +27,17 @@ class LoginView(APIView):
             token, created = Token.objects.get_or_create(user=user)
             return Response({"token": token.key}, status=status.HTTP_200_OK)
         return Response({"error": "Неверные учетные данные"}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class HelpDeskRequestViewSet(viewsets.ModelViewSet):
+    queryset = HelpDeskRequest.objects.all()
+    serializer_class = HelpDeskRequestSerializer
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'users': reverse('register-user', request=request, format=format),
+        'login': reverse('login', request=request, format=format),
+        'helpdesk-requests': reverse('helpdeskrequest-list', request=request, format=format),
+    })

@@ -31,7 +31,6 @@ class HelpDeskRequest(models.Model):
     handler = models.ForeignKey(HelpDeskUser, related_name='handled_requests', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Заявку принял')
     is_closed = models.BooleanField(default=False, verbose_name='Закрыта')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создана')
-    decline_reason = models.TextField(null=True, blank=True, verbose_name='Причина отказа')
 
     NEW = 'NEW'
     IN_PROCESS = 'IN_PROCESS'

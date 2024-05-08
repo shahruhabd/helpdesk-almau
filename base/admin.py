@@ -8,3 +8,4 @@ class HelpDeskRequestAdmin(admin.ModelAdmin):
 
 admin.site.register(Lecturer)
 admin.site.register(HelpDeskUser)
+admin.site.register(Auditorium)

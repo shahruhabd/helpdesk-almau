@@ -54,6 +54,10 @@ class HelpDeskRequestViewSet(viewsets.ModelViewSet):
     queryset = HelpDeskRequest.objects.all()
     serializer_class = HelpDeskRequestSerializer
 
+class AuditoriumViewSet(viewsets.ModelViewSet):
+    queryset = Auditorium.objects.all()
+    serializer_class = AuditoriumSerializer
+
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -61,4 +65,5 @@ def api_root(request, format=None):
         'users': reverse('register-user', request=request, format=format),
         'login': reverse('login', request=request, format=format),
         'helpdesk-requests': reverse('helpdeskrequest-list', request=request, format=format),
+        'auditoriums': reverse('auditorium-list', request=request, format=format),
     })

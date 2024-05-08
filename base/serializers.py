@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Lecturer, HelpDeskRequest, HelpDeskUser
+from .models import Lecturer, HelpDeskRequest, HelpDeskUser, Auditorium
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -47,14 +47,11 @@ class LecturerSerializer(serializers.ModelSerializer):
 
 
 class HelpDeskRequestSerializer(serializers.ModelSerializer):
-    creator_full_name = serializers.CharField(source='creator.full_name', read_only=True)
-    
-    # Если handler может быть None, следует предусмотреть этот случай:
-    handler_username = serializers.SerializerMethodField()
+    auditorium_number_display = serializers.CharField(source='auditorium_number.number', read_only=True)
 
     class Meta:
         model = HelpDeskRequest
-        fields = '__all__'
+        fields = '__all__'  # Убедитесь, что auditorium_number также включен, если нужно сохранять это поле
 
     def get_handler_username(self, instance):
         # Возвращаем username handler'а, если он существует
@@ -62,7 +59,12 @@ class HelpDeskRequestSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['creator'] = instance.creator.full_name
-        # Используем get_handler_username для получения имени пользователя handler'а
         representation['handler'] = self.get_handler_username(instance)
         return representation
+
+
+
+class AuditoriumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Auditorium
+        fields = '__all__'

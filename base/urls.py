@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import register_user, LoginView, HelpDeskRequestViewSet, api_root
+from .views import register_user, LoginView, HelpDeskRequestViewSet, AuditoriumViewSet, api_root
 
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'helpdesk-requests', HelpDeskRequestViewSet)
+router.register(r'auditoriums', AuditoriumViewSet)
 
 
 urlpatterns = [
@@ -24,6 +25,13 @@ urlpatterns = [
         'patch': 'partial_update',
         'delete': 'destroy'
     }), name='helpdesk-requests-detail'),
+
+    path('auditoriums/<int:pk>/', AuditoriumViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+    }), name='auditorium-detail'),
 ]
 
 urlpatterns += router.urls

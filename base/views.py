@@ -30,19 +30,16 @@ class LoginView(APIView):
                 helpdesk_user = HelpDeskUser.objects.get(user=user)
                 helpdesk_username = helpdesk_user.username
                 is_helpdesk_user = True
+                helpdesk_user_id = helpdesk_user.id
             except HelpDeskUser.DoesNotExist:
                 helpdesk_username = None
                 is_helpdesk_user = False
+                helpdesk_user_id = None
 
-            try:
-                lecturer = Lecturer.objects.get(user=user)
-                lecturer_id = lecturer.id
-            except Lecturer.DoesNotExist:
-                lecturer_id = None
             
             return Response({
                 "token": token.key,
-                "userId": lecturer_id,
+                "userId": helpdesk_user_id,
                 "helpdeskUser": is_helpdesk_user,
                 "helpdeskUsername": helpdesk_username  # Возвращаем username, если это HelpDeskUser
             }, status=status.HTTP_200_OK)

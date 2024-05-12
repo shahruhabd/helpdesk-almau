@@ -47,20 +47,20 @@ class LecturerSerializer(serializers.ModelSerializer):
 
 
 class HelpDeskRequestSerializer(serializers.ModelSerializer):
-    auditorium_number_display = serializers.CharField(source='auditorium_number.number', read_only=True)
+    handler_username = serializers.SerializerMethodField()
 
     class Meta:
         model = HelpDeskRequest
-        fields = '__all__'  # Убедитесь, что auditorium_number также включен, если нужно сохранять это поле
-
-    def get_handler_username(self, instance):
-        # Возвращаем username handler'а, если он существует
-        return instance.handler.username if instance.handler else None
+        fields = '__all__'
+    
+    def get_handler_username(self, obj):
+        return obj.handler.username if obj.handler else None
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['handler'] = self.get_handler_username(instance)
+        representation['handler_username'] = self.get_handler_username(instance)
         return representation
+
 
 
 
